@@ -104,28 +104,30 @@ Browse the examples in the [`examples`](https://github.com/HaoboGu/rmk/tree/main
 
 4. (Optional) Flash via USB
 
-   Without a debug probe, you can use `elf2uf2-rs` to flash via USB:
+   Without a debug probe, you can flash the firmware directly via USB using the Raspberry Pi Pico's boot selection mode:
 
-   1. Install the tool: `cargo install elf2uf2-rs`
-   2. Modify `examples/use_rust/rp2040/.cargo/config.toml` to use `elf2uf2`:
-      ```diff
-      - runner = "probe-rs run --chip RP2040"
-      + runner = "elf2uf2-rs -d"
-      ```
-   3. Connect your rp2040 board while holding the BOOTSEL button until the USB drive appears
-   4. Flash the firmware:
+   **Putting the Pico into Boot Select Mode:**
+   1. Unplug the USB cable from the Raspberry Pi Pico if it is connected
+   2. Hold down the **BOOTSEL** button on the Pico
+   3. While holding the button, plug in the USB cable
+   4. Continue holding for a moment, then release — the Pico should now appear as a USB mass storage device (RPI-RP2)
+
+   **Flashing the Firmware:**
+   1. Navigate to the example directory:
       ```shell
       cd examples/use_rust/rp2040
+      ```
+   2. Build and flash the firmware:
+      ```shell
       cargo run --release
       ```
-      Upon successful completion, you'll see output similar to:
+   3. The firmware will be built and flashed to the Pico automatically. Upon successful completion, you'll see output similar to:
       ```shell
       Finished release [optimized + debuginfo] target(s) in 0.21s
-      Running `elf2uf2-rs -d 'target\thumbv6m-none-eabi\release\rmk-rp2040'`
-      Found pico uf2 disk G:\
-      Transfering program to pico
-      173.00 KB / 173.00 KB [=======================] 100.00 % 193.64 KB/s
+      Running `probe-rs run --chip RP2040 'target\thumbv6m-none-eabi\release\rmk-rp2040'`
       ```
+
+   > **Note:** If `probe-rs` does not detect the device in boot mode, you can alternatively use [`rp2040load`](https://github.com/posanba/rp2040load) or [`elf2uf2-rs`](https://crates.io/crates/elf2uf2-rs). Install with `cargo install elf2uf2-rs`, then update `.cargo/config.toml` to change the runner from `probe-rs run --chip RP2040` to `elf2uf2-rs -d`, and run `cargo run --release` again.
 
 ## [Development Roadmap](https://rmk.rs/docs/development/roadmap)
 
