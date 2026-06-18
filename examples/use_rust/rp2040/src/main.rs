@@ -45,8 +45,12 @@ async fn main(_spawner: Spawner) {
     let driver = Driver::new(p.USB, Irqs);
 
     // Pin config
+    // input = rows
+    // output = columns
     let (row_pins, col_pins) =
-        config_matrix_pins_rp!(peripherals: p, input: [PIN_6, PIN_7, PIN_8, PIN_9], output: [PIN_19, PIN_20, PIN_21]);
+        config_matrix_pins_rp!(peripherals: p, input: [PIN_5, PIN_4, PIN_3, PIN_2, PIN_1], output: [PIN_15, PIN_14, PIN_13, PIN_12, PIN_11, PIN_10]);
+        // config_matrix_pins_rp!(peripherals: p, input: [PIN_1, PIN_2, PIN_3, PIN_4, PIN_5], output: [PIN_10, PIN_11, PIN_12, PIN_13, PIN_14, PIN_15]);
+        // config_matrix_pins_rp!(peripherals: p, input: [PIN_3, PIN_7, PIN_8, PIN_9], output: [PIN_10, PIN_11, PIN_21]);
 
     // Use internal flash to emulate eeprom
     // Both blocking and async flash are support, use different API
@@ -71,7 +75,11 @@ async fn main(_spawner: Spawner) {
 
     // Initialize the storage and keymap
     let mut keymap_data = KeymapData::new(keymap::get_default_keymap());
-    let storage_config = StorageConfig::default();
+    // let storage_config = StorageConfig::default();
+    let storage_config = StorageConfig {
+        clear_storage: true,
+        ..Default::default()
+    };
     let mut behavior_config = BehaviorConfig::default();
     let per_key_config = PositionalConfig::default();
     let (keymap, mut storage) = initialize_keymap_and_storage(
